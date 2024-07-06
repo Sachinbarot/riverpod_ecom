@@ -29,7 +29,7 @@ class FavouritesScreen extends ConsumerWidget {
             'title': title as String,
             'price': price as int,
             'description': description as String,
-            'images': images as List<String>,
+            'images': images as List,
           } in favouritesMap)
         Favouritesmodel(
             id: id,

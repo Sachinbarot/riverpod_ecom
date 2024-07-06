@@ -43,7 +43,7 @@ class ProductModel {
 
 class Category {
   int id;
-  String? name;
+  String name;
   String image;
 
   Category({

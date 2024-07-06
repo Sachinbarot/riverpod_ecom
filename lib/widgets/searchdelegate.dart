@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:riverpod_ecom/apiservice.dart';
+import 'package:riverpod_ecom/providers/productsprovider.dart';
 
 class SearchBar extends SearchDelegate {
   @override
@@ -28,7 +30,6 @@ class SearchBar extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
     throw UnimplementedError();
   }
 

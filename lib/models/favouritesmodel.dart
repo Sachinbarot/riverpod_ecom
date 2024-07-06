@@ -5,7 +5,7 @@ class Favouritesmodel {
   String title;
   int price;
   String description;
-  List<String> images;
+  List images;
 
   Favouritesmodel({
     this.id,

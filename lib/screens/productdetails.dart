@@ -78,16 +78,17 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                               print(widget.product.images[i]);
                             }
                             await addProduct(Favouritesmodel(
-                                //id: 1,
-                                userId: userId,
-                                productId: widget.product.id,
-                                title: widget.product.title,
-                                price: widget.product.price,
-                                description: widget.product.description,
-                                images: [
-                                  widget.product.images[0],
-                                  widget.product.images[1],
-                                ])).whenComplete(() {
+                                    //id: 1,
+                                    userId: userId,
+                                    productId: widget.product.id,
+                                    title: widget.product.title,
+                                    price: widget.product.price,
+                                    description: widget.product.description,
+                                    images: [
+                                      widget.product.images[0].toString(),
+                                      widget.product.images[1].toString(),
+                                    ].toList()))
+                                .whenComplete(() {
                               print("Favourite");
                             });
                           },
