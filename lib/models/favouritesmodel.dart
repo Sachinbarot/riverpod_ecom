@@ -1,31 +1,31 @@
 class Favouritesmodel {
-  int userId;
   int id;
+  int userId;
+  int productId;
   String title;
   int price;
   String description;
-  Category category;
   List<String> images;
 
   Favouritesmodel({
-    required this.userId,
     required this.id,
+    required this.userId,
+    required this.productId,
     required this.title,
     required this.price,
     required this.description,
-    required this.category,
     required this.images,
   });
-}
 
-class Category {
-  int id;
-  String name;
-  String image;
-
-  Category({
-    required this.id,
-    required this.name,
-    required this.image,
-  });
+  Map<String, Object?> toMap() {
+    return {
+      'id': id,
+      'userId': userId,
+      'productId': productId,
+      'title': title,
+      'price': price,
+      'description': description,
+      'images': images,
+    };
+  }
 }

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:get/route_manager.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 import 'package:riverpod_ecom/apiservice.dart';
 import 'package:riverpod_ecom/screens/productlist.dart';
 import 'package:riverpod_ecom/screens/register.dart';
 import 'package:riverpod_ecom/utils/constants.dart';
 
 import 'package:riverpod_ecom/widgets/formwidgets.dart';
+import 'package:sqflite/sqflite.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
@@ -86,8 +88,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 apiservice
                                     .loginUser(_emailController.text,
                                         _passwordController.text)
-                                    .then((value) {
+                                    .then((value) async {
                                   if (value) {
+                                    final database = openDatabase(
+                                        join(await getDatabasesPath(),
+                                            'favourites_database.db'),
+                                        onCreate: (db, version) {
+                                      // Run the CREATE TABLE statement on the database.
+                                      return db.execute(
+                                        'CREATE TABLE favourites(id INTEGER PRIMARY KEY, userId INTEGER,productId INTEGER, title TEXT,price INTEGER, description TEXT, images List)',
+                                      );
+                                    }, version: 1);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(
                                             content:

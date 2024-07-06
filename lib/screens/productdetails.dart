@@ -2,8 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart';
+import 'package:riverpod_ecom/models/favouritesmodel.dart';
 import 'package:riverpod_ecom/models/productmodel.dart';
+import 'package:riverpod_ecom/models/userregisterresponsemodel.dart';
 import 'package:riverpod_ecom/widgets/dotindicator.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ProductdetailsScreen extends StatefulWidget {
   const ProductdetailsScreen({Key? key, required this.product})
@@ -16,6 +20,25 @@ class ProductdetailsScreen extends StatefulWidget {
 
 class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
   dynamic currentIndex = 0;
+
+  // Define a function that inserts dogs into the database
+  Future<void> addProduct(Favouritesmodel favouritemodel) async {
+    // Get a reference to the database.
+    final database = openDatabase(
+      join(await getDatabasesPath(), 'favourites_database.db'),
+    );
+    final db = await database;
+
+    await db.insert(
+      'favourites',
+      favouritemodel.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    final List<Map<String, Object?>> favouriteMaps =
+        await db.query('favourites');
+    print(favouriteMaps);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +70,19 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                         top: 15.0,
                         right: 20.0,
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () async {
+                            await addProduct(Favouritesmodel(
+                                    id: 1,
+                                    userId: 1,
+                                    productId: widget.product.id,
+                                    title: widget.product.title,
+                                    price: widget.product.price,
+                                    description: widget.product.description,
+                                    images: widget.product.images))
+                                .whenComplete(() {
+                              print("Favourite");
+                            });
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                                 color: Colors.white,

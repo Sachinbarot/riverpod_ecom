@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:riverpod_ecom/models/authmodel.dart';
 import 'package:riverpod_ecom/models/productmodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:riverpod_ecom/models/userregisterresponsemodel.dart';
+import 'package:riverpod_ecom/screens/login.dart';
 import 'package:riverpod_ecom/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,6 +46,9 @@ class Apiservice {
       print(response.body);
       return UserModel.fromJson(jsonDecode(response.body));
     } else {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove("token");
+      Get.to(() => LoginScreen());
       throw Exception("Failed");
     }
   }
