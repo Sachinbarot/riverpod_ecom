@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'package:riverpod_ecom/models/favouritesmodel.dart';
 import 'package:riverpod_ecom/models/productmodel.dart';
 import 'package:riverpod_ecom/models/userregisterresponsemodel.dart';
+import 'package:riverpod_ecom/utils/constants.dart';
 import 'package:riverpod_ecom/widgets/dotindicator.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -36,7 +37,7 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
     );
 
     final List<Map<String, Object?>> favouriteMaps =
-        await db.query('favourites');
+        await db.query('favourites WHERE userId = $userId');
     print(favouriteMaps);
   }
 
@@ -71,15 +72,22 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                         right: 20.0,
                         child: InkWell(
                           onTap: () async {
+                            for (int i = 0;
+                                i < widget.product.images.length;
+                                i++) {
+                              print(widget.product.images[i]);
+                            }
                             await addProduct(Favouritesmodel(
-                                    //id: 1,
-                                    userId: 1,
-                                    productId: widget.product.id,
-                                    title: widget.product.title,
-                                    price: widget.product.price,
-                                    description: widget.product.description,
-                                    images: widget.product.images))
-                                .whenComplete(() {
+                                //id: 1,
+                                userId: userId,
+                                productId: widget.product.id,
+                                title: widget.product.title,
+                                price: widget.product.price,
+                                description: widget.product.description,
+                                images: [
+                                  widget.product.images[0],
+                                  widget.product.images[1],
+                                ])).whenComplete(() {
                               print("Favourite");
                             });
                           },
@@ -126,13 +134,15 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
             const SizedBox(
               height: 10.0,
             ),
-            Text(
-              widget.product.category.name,
-              style: const TextStyle(
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey),
-            ),
+            widget.product.category != null
+                ? Text(
+                    widget.product.category!.name.toString(),
+                    style: const TextStyle(
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey),
+                  )
+                : Container(),
             const SizedBox(
               height: 3.0,
             ),

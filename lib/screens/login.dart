@@ -94,9 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         join(await getDatabasesPath(),
                                             'favourites_database.db'),
                                         onCreate: (db, version) {
-                                      // Run the CREATE TABLE statement on the database.
                                       return db.execute(
-                                        'CREATE TABLE favourites(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, userId INTEGER,productId INTEGER, title TEXT,price INTEGER, description TEXT, images List)',
+                                        'CREATE TABLE favourites(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, userId INTEGER,productId INTEGER, title TEXT,price INTEGER, description TEXT, images LIST)',
                                       );
                                     }, version: 1);
                                     ScaffoldMessenger.of(context).showSnackBar(

@@ -7,6 +7,8 @@ import 'package:get/route_manager.dart';
 import 'package:riverpod_ecom/apiservice.dart';
 import 'package:riverpod_ecom/models/userregisterresponsemodel.dart';
 import 'package:riverpod_ecom/providers/userprovider.dart';
+import 'package:riverpod_ecom/screens/edituser.dart';
+import 'package:riverpod_ecom/screens/favourites.dart';
 import 'package:riverpod_ecom/screens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +22,11 @@ class UserProfileScreen extends ConsumerWidget {
         appBar: AppBar(
           title: const Text("User Profile"),
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(LucideIcons.pen))
+            IconButton(
+                onPressed: () {
+                  Get.to(() => UpdateUserScreen());
+                },
+                icon: const Icon(LucideIcons.pen))
           ],
         ),
         body: user.when(
@@ -63,6 +69,13 @@ class UserProfileScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
+                      ),
+                      ListTile(
+                        onTap: () => Get.to(() => FavouritesScreen()),
+                        tileColor: Colors.grey.shade50,
+                        leading: Icon(LucideIcons.heart),
+                        title: Text("Favourites"),
+                        trailing: Icon(Icons.arrow_forward_ios),
                       ),
                       const SizedBox(
                         height: 10.0,

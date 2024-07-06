@@ -9,3 +9,4 @@ var registerUrl = baseUrl + "users/";
 var loginUrl = baseUrl + "auth/login";
 var productlistUrl = baseUrl + ("products");
 var userProfile = baseUrl + ("auth/profile");
+var updateProfile = baseUrl + ("users/$userId");

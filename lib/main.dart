@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:riverpod_ecom/apiservice.dart';
 import 'package:riverpod_ecom/models/productmodel.dart';
 import 'package:riverpod_ecom/providers/productsprovider.dart';
 import 'package:riverpod_ecom/screens/login.dart';
@@ -24,10 +25,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  getToken() async {
+  getAuth() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
     setState(() {
       authToken = prefs.getString("token");
+      Apiservice apiservice = Apiservice();
+      apiservice.getUser();
       userId = prefs.getString("userId");
     });
     print("authToken $authToken");
@@ -35,7 +39,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    getToken();
+    getAuth();
     super.initState();
   }
 

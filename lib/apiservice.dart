@@ -32,10 +32,8 @@ class Apiservice {
     if (response.statusCode == 201) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("token", jsonDecode(response.body)["access_token"]);
-      prefs.setString("userId", jsonDecode(response.body)["id"]);
       userId = jsonDecode(response.body)["id"];
       authToken = jsonDecode(response.body)["access_token"];
-
       return true;
     } else {
       return false;
@@ -46,6 +44,7 @@ class Apiservice {
     var response = await http.get(Uri.parse(userProfile),
         headers: {"Authorization": "Bearer ${authToken}"});
     if (response.statusCode == 200) {
+      userId = jsonDecode(response.body)["id"];
       print(response.body);
       return UserModel.fromJson(jsonDecode(response.body));
     } else {
@@ -53,6 +52,19 @@ class Apiservice {
       prefs.remove("token");
       Get.to(() => LoginScreen());
       throw Exception("Failed");
+    }
+  }
+
+  Future<UserModel> updateUser(String name, String email) async {
+    var response = await http.put(Uri.parse(updateProfile),
+        body: {"email": email, "name": name},
+        headers: {"Authorization": "Bearer ${authToken}"});
+    if (response.statusCode == 200) {
+      userId = jsonDecode(response.body)["id"];
+      print(response.body);
+      return UserModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Error");
     }
   }
 }

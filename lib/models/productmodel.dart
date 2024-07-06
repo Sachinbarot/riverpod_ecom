@@ -10,7 +10,7 @@ class ProductModel {
   String title;
   int price;
   String description;
-  Category category;
+  Category? category;
   List<String> images;
 
   ProductModel({
@@ -18,7 +18,7 @@ class ProductModel {
     required this.title,
     required this.price,
     required this.description,
-    required this.category,
+    this.category,
     required this.images,
   });
 
@@ -36,14 +36,14 @@ class ProductModel {
         "title": title,
         "price": price,
         "description": description,
-        "category": category.toJson(),
+        "category": category!.toJson(),
         "images": List<dynamic>.from(images.map((x) => x)),
       };
 }
 
 class Category {
   int id;
-  String name;
+  String? name;
   String image;
 
   Category({
@@ -54,8 +54,8 @@ class Category {
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
         id: json["id"],
-        name: json["name"],
-        image: json["image"],
+        name: json["name"].toString(),
+        image: json["image"].toString(),
       );
 
   Map<String, dynamic> toJson() => {
