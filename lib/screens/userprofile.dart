@@ -70,9 +70,12 @@ class UserProfileScreen extends ConsumerWidget {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
                       ListTile(
                         onTap: () => Get.to(() => FavouritesScreen()),
-                        tileColor: Colors.grey.shade50,
+                        tileColor: Colors.grey.shade100,
                         leading: Icon(LucideIcons.heart),
                         title: Text("Favourites"),
                         trailing: Icon(Icons.arrow_forward_ios),

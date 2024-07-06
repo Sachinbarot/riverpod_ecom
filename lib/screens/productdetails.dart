@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:riverpod_ecom/models/favouritesmodel.dart';
 import 'package:riverpod_ecom/models/productmodel.dart';
@@ -38,7 +39,45 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
 
     final List<Map<String, Object?>> favouriteMaps =
         await db.query('favourites WHERE userId = $userId');
-    print(favouriteMaps);
+    // print(favouriteMaps);
+  }
+
+  dynamic favouritesMap;
+
+  Future<List<Favouritesmodel>> favourites() async {
+    final database = openDatabase(
+      join(await getDatabasesPath(), 'favourites_database.db'),
+    );
+    final db = await database;
+
+    favouritesMap = await db.query('favourites WHERE userId == $userId');
+    print("Favourite Table:- ${favouritesMap}");
+    return [
+      for (final {
+            'id': id as int,
+            'userId': userId as int,
+            'productId': productId as int,
+            'title': title as String,
+            'price': price as int,
+            'description': description as String,
+            'images': images as List,
+          } in favouritesMap)
+        Favouritesmodel(
+            id: id,
+            userId: userId,
+            productId: productId,
+            title: title,
+            price: price,
+            description: description,
+            images: images),
+    ];
+  }
+
+  @override
+  void initState() {
+    favourites();
+    print(widget.product.id);
+    super.initState();
   }
 
   @override
@@ -72,25 +111,51 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                         right: 20.0,
                         child: InkWell(
                           onTap: () async {
-                            for (int i = 0;
-                                i < widget.product.images.length;
-                                i++) {
-                              print(widget.product.images[i]);
+                            if (favouritesMap.length > 0) {
+                              for (var pid in favouritesMap) {
+                                // print("here");
+                                print(pid["productId"] != widget.product.id);
+                                if (pid["productId"] != widget.product.id) {
+                                  await addProduct(Favouritesmodel(
+                                          //id: 1,
+                                          userId: userId,
+                                          productId: widget.product.id,
+                                          title: widget.product.title,
+                                          price: widget.product.price,
+                                          description:
+                                              widget.product.description,
+                                          images: [
+                                            widget.product.images[0].toString(),
+                                            widget.product.images[1].toString(),
+                                          ].toList()))
+                                      .whenComplete(() {
+                                    print("Favourite");
+                                    favourites();
+                                  });
+                                  break;
+                                } else {
+                                  print("Already in favoruties");
+                                }
+                              }
+                              // print("null");
+                            } else {
+                              await addProduct(Favouritesmodel(
+                                      //id: 1,
+                                      userId: userId,
+                                      productId: widget.product.id,
+                                      title: widget.product.title,
+                                      price: widget.product.price,
+                                      description: widget.product.description,
+                                      images: [
+                                        widget.product.images[0].toString(),
+                                        widget.product.images[1].toString(),
+                                      ].toList()))
+                                  .whenComplete(() {
+                                print("Favourite");
+                                favourites();
+                              });
+                              //  print("not null");
                             }
-                            await addProduct(Favouritesmodel(
-                                    //id: 1,
-                                    userId: userId,
-                                    productId: widget.product.id,
-                                    title: widget.product.title,
-                                    price: widget.product.price,
-                                    description: widget.product.description,
-                                    images: [
-                                      widget.product.images[0].toString(),
-                                      widget.product.images[1].toString(),
-                                    ].toList()))
-                                .whenComplete(() {
-                              print("Favourite");
-                            });
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -125,7 +190,7 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                 },
                 options: CarouselOptions(
                   viewportFraction: 1,
-                  autoPlay: true,
+                  autoPlay: false,
                   onPageChanged: (index, reason) {
                     setState(() {
                       currentIndex = index;
