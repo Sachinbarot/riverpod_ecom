@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       authToken = prefs.getString("token");
       Apiservice apiservice = Apiservice();
-      apiservice.getUser();
+      authToken != null ? apiservice.getUser() : null;
       userId = prefs.getString("userId");
     });
     print("authToken $authToken");

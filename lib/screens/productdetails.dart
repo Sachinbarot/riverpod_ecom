@@ -22,6 +22,7 @@ class ProductdetailsScreen extends StatefulWidget {
 
 class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
   dynamic currentIndex = 0;
+  bool isAlreadyFavourite = false;
 
   // Define a function that inserts dogs into the database
   Future<void> addProduct(Favouritesmodel favouritemodel) async {
@@ -113,34 +114,18 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                           onTap: () async {
                             if (favouritesMap.length > 0) {
                               for (var pid in favouritesMap) {
-                                // print("here");
-                                print(pid["productId"] != widget.product.id);
-                                if (pid["productId"] != widget.product.id) {
-                                  await addProduct(Favouritesmodel(
-                                          //id: 1,
-                                          userId: userId,
-                                          productId: widget.product.id,
-                                          title: widget.product.title,
-                                          price: widget.product.price,
-                                          description:
-                                              widget.product.description,
-                                          images: [
-                                            widget.product.images[0].toString(),
-                                            widget.product.images[1].toString(),
-                                          ].toList()))
-                                      .whenComplete(() {
-                                    print("Favourite");
-                                    favourites();
+                                if (pid["productId"] == widget.product.id) {
+                                  setState(() {
+                                    isAlreadyFavourite = true;
                                   });
-                                  break;
-                                } else {
-                                  print("Already in favoruties");
+                                  favourites();
                                 }
                               }
-                              // print("null");
+                            }
+                            if (isAlreadyFavourite) {
+                              print("can 't add");
                             } else {
                               await addProduct(Favouritesmodel(
-                                      //id: 1,
                                       userId: userId,
                                       productId: widget.product.id,
                                       title: widget.product.title,
@@ -148,13 +133,12 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                                       description: widget.product.description,
                                       images: [
                                         widget.product.images[0].toString(),
-                                        widget.product.images[1].toString(),
+                                        //    widget.product.images[1].toString(),
                                       ].toList()))
                                   .whenComplete(() {
                                 print("Favourite");
                                 favourites();
                               });
-                              //  print("not null");
                             }
                           },
                           child: Container(

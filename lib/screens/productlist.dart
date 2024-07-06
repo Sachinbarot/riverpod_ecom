@@ -27,7 +27,71 @@ class ProductlistScreen extends ConsumerWidget {
                 Get.to(() => UserProfileScreen());
               },
               icon: Icon(LucideIcons.user_round),
-            )
+            ),
+            IconButton(
+                onPressed: () {
+                  Get.bottomSheet(StatefulBuilder(builder: (context, setState) {
+                    return Container(
+                      width: double.infinity,
+                      color: Colors.white,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Filter",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "By categories",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black45,
+                                    fontSize: 14),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                height: 70,
+                                child: ListView.builder(
+                                  itemCount: 5,
+                                  scrollDirection: Axis.horizontal,
+                                  physics: ScrollPhysics(),
+                                  shrinkWrap: true,
+                                  primary: true,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          width: 100,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            // shape: BoxShape.circle,
+                                            border:
+                                                Border.all(color: Colors.black),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Center(
+                                            child: Text("Category $index"),
+                                          ),
+                                        ));
+                                  },
+                                ),
+                              )
+                            ]),
+                      ),
+                    );
+                  }));
+                },
+                icon: Icon(LucideIcons.filter))
           ],
         ),
         body: products.when(
@@ -40,6 +104,7 @@ class ProductlistScreen extends ConsumerWidget {
                             products.map((e) => e).toList();
                         return InkWell(
                           onTap: () {
+                            print(product[index].images[0]);
                             Get.to(() =>
                                 ProductdetailsScreen(product: product[index]));
                           },
@@ -57,8 +122,9 @@ class ProductlistScreen extends ConsumerWidget {
                                             borderRadius:
                                                 BorderRadius.circular(15),
                                             image: DecorationImage(
-                                              image: NetworkImage(
-                                                  product[index].images[0]),
+                                              image: NetworkImage(product[index]
+                                                  .images[0]
+                                                  .toString()),
                                               fit: BoxFit.fill,
                                             )),
                                       ),
