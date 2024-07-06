@@ -1,4 +1,5 @@
 dynamic authToken;
+dynamic userId;
 var userName;
 
 //apis

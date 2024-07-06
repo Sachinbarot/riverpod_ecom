@@ -7,6 +7,7 @@ import 'package:get/route_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:riverpod_ecom/models/productmodel.dart';
 import 'package:riverpod_ecom/providers/productsprovider.dart';
+import 'package:riverpod_ecom/providers/userprovider.dart';
 import 'package:riverpod_ecom/screens/productdetails.dart';
 import 'package:riverpod_ecom/screens/userprofile.dart';
 import 'package:riverpod_ecom/utils/constants.dart';

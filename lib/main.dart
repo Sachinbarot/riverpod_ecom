@@ -28,6 +28,7 @@ class _MyAppState extends State<MyApp> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       authToken = prefs.getString("token");
+      userId = prefs.getString("userId");
     });
     print("authToken $authToken");
   }

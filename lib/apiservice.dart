@@ -32,7 +32,10 @@ class Apiservice {
     if (response.statusCode == 201) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("token", jsonDecode(response.body)["access_token"]);
+      prefs.setString("userId", jsonDecode(response.body)["id"]);
+      userId = jsonDecode(response.body)["id"];
       authToken = jsonDecode(response.body)["access_token"];
+
       return true;
     } else {
       return false;
