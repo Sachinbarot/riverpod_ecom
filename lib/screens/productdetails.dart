@@ -72,7 +72,7 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                         child: InkWell(
                           onTap: () async {
                             await addProduct(Favouritesmodel(
-                                    id: 1,
+                                    //id: 1,
                                     userId: 1,
                                     productId: widget.product.id,
                                     title: widget.product.title,

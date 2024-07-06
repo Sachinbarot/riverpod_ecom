@@ -1,5 +1,5 @@
 class Favouritesmodel {
-  int id;
+  int? id;
   int userId;
   int productId;
   String title;
@@ -8,7 +8,7 @@ class Favouritesmodel {
   List<String> images;
 
   Favouritesmodel({
-    required this.id,
+    this.id,
     required this.userId,
     required this.productId,
     required this.title,
