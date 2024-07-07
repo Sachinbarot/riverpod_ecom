@@ -95,14 +95,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                             'favourites_database.db'),
                                         onCreate: (db, version) {
                                       return db.execute(
-                                        'CREATE TABLE favourites(id INTEGER PRIMARY KEY, userId INTEGER,productId INTEGER UNIQUE, title TEXT,price INTEGER, description TEXT, images TEXT)',
+                                        'CREATE TABLE favourites(id INTEGER PRIMARY KEY, userId INTEGER,productId INTEGER UNIQUE, title TEXT,price INTEGER, description TEXT, images BLOB)',
                                       );
                                     }, version: 1);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(
                                             content:
                                                 Text("Successfully LoggedIn")));
-                                    Get.to(() => const ProductlistScreen());
+                                    Get.to(() => ProductlistScreen());
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(

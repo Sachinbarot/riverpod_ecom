@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 import 'package:riverpod_ecom/models/favouritesmodel.dart';
 import 'package:riverpod_ecom/models/productmodel.dart';
 import 'package:riverpod_ecom/models/userregisterresponsemodel.dart';
+import 'package:riverpod_ecom/screens/generateinvoicescreen.dart';
 import 'package:riverpod_ecom/utils/constants.dart';
 import 'package:riverpod_ecom/widgets/dotindicator.dart';
 import 'package:sqflite/sqflite.dart';
@@ -52,7 +53,8 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
     final db = await database;
 
     favouritesMap = await db.query('favourites WHERE userId == $userId');
-    print("Favourite Table:- ${favouritesMap}");
+    checkFavourite();
+    //print("Favourite Table:- ${favouritesMap}");
     return [
       for (final {
             'id': id as int,
@@ -72,6 +74,36 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
             description: description,
             images: images),
     ];
+  }
+
+  checkFavourite() {
+    if (favouritesMap.length > 0) {
+      for (var pid in favouritesMap) {
+        if (pid["productId"] == widget.product.id) {
+          if (mounted) {
+            setState(() {
+              isAlreadyFavourite = true;
+            });
+          }
+          favourites();
+        }
+      }
+    }
+  }
+
+  removeFromFavourite() async {
+    final database = openDatabase(
+      join(await getDatabasesPath(), 'favourites_database.db'),
+    );
+    final db = await database;
+    await db.delete('favourites',
+        where: 'productId = ?', whereArgs: [widget.product.id]).then((value) {
+      setState(() {
+        isAlreadyFavourite = false;
+      });
+      print(value);
+    });
+    ;
   }
 
   @override
@@ -107,51 +139,78 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                           ),
                         ),
                       ),
-                      Positioned(
-                        top: 15.0,
-                        right: 20.0,
-                        child: InkWell(
-                          onTap: () async {
-                            if (favouritesMap.length > 0) {
-                              for (var pid in favouritesMap) {
-                                if (pid["productId"] == widget.product.id) {
-                                  setState(() {
-                                    isAlreadyFavourite = true;
-                                  });
-                                  favourites();
-                                }
-                              }
-                            }
-                            if (isAlreadyFavourite) {
-                              print("can 't add");
-                            } else {
-                              await addProduct(Favouritesmodel(
-                                      userId: userId,
-                                      productId: widget.product.id,
-                                      title: widget.product.title,
-                                      price: widget.product.price,
-                                      description: widget.product.description,
-                                      images: [
-                                        widget.product.images[0].toString(),
-                                        //    widget.product.images[1].toString(),
-                                      ].toList()))
-                                  .whenComplete(() {
-                                print("Favourite");
-                                favourites();
-                              });
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(30.0)),
-                            child: const Padding(
-                              padding: EdgeInsets.all(4.0),
-                              child: Icon(LucideIcons.heart),
+                      isAlreadyFavourite
+                          ? Positioned(
+                              top: 15.0,
+                              right: 20.0,
+                              child: InkWell(
+                                onTap: () async {
+                                  removeFromFavourite();
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.circular(30.0)),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: Icon(
+                                      Icons.favorite,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Positioned(
+                              top: 15.0,
+                              right: 20.0,
+                              child: InkWell(
+                                onTap: () async {
+                                  if (favouritesMap.length > 0) {
+                                    for (var pid in favouritesMap) {
+                                      if (pid["productId"] ==
+                                          widget.product.id) {
+                                        setState(() {
+                                          isAlreadyFavourite = true;
+                                        });
+                                        favourites();
+                                      }
+                                    }
+                                  }
+                                  if (isAlreadyFavourite) {
+                                    print("can 't add");
+                                  } else {
+                                    await addProduct(Favouritesmodel(
+                                            userId: userId,
+                                            productId: widget.product.id,
+                                            title: widget.product.title,
+                                            price: widget.product.price,
+                                            description:
+                                                widget.product.description,
+                                            images: [
+                                              widget.product.images[0]
+                                                  .toString(),
+                                              //    widget.product.images[1].toString(),
+                                            ].toList()))
+                                        .whenComplete(() {
+                                      print("Favourite");
+                                      favourites();
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.circular(30.0)),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: Icon(LucideIcons.heart),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
                       Positioned(
                         bottom: 10,
                         child: Padding(
@@ -218,6 +277,37 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                   fontSize: 12.0,
                   fontWeight: FontWeight.w300,
                   color: Colors.black87),
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+            SizedBox(
+              height: 45,
+              width: MediaQuery.of(context).size.width / 2.2,
+              child: ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => GenerateinvoiceScreen(
+                          product: widget.product,
+                        ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    backgroundColor: Colors.white,
+                    iconColor: Colors.white,
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text("Generate Invoice  ",
+                          style: TextStyle(color: Colors.black)),
+                      Icon(
+                        LucideIcons.receipt_text,
+                        color: Colors.black,
+                      )
+                    ],
+                  )),
             ),
           ],
         ),

@@ -5,6 +5,7 @@ class CustomFormFiled extends StatelessWidget {
   final String labelText;
   final String hintText;
   final IconData prefixIcon;
+  final String? Function(String?)? validator;
   final bool obscureText;
   final TextEditingController controller;
   const CustomFormFiled(
@@ -12,6 +13,7 @@ class CustomFormFiled extends StatelessWidget {
       required this.labelText,
       required this.hintText,
       required this.prefixIcon,
+      this.validator,
       required this.obscureText,
       required this.controller});
 
@@ -19,6 +21,7 @@ class CustomFormFiled extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      validator: validator,
       obscureText: obscureText,
       decoration: InputDecoration(
           labelText: labelText,

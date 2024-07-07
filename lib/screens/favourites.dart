@@ -49,15 +49,15 @@ class FavouritesScreen extends ConsumerWidget {
         appBar: AppBar(
           title: Text("My Favourites"),
           actions: [
-            IconButton(
-                onPressed: () async {
-                  final database = openDatabase(
-                    join(await getDatabasesPath(), 'favourites_database.db'),
-                  );
-                  final db = await database;
-                  await db.delete('favourites');
-                },
-                icon: Icon(Icons.delete))
+            // IconButton(
+            //     onPressed: () async {
+            //       final database = openDatabase(
+            //         join(await getDatabasesPath(), 'favourites_database.db'),
+            //       );
+            //       final db = await database;
+            //       await db.delete('favourites');
+            //     },
+            //     icon: Icon(Icons.delete))
           ],
         ),
         body: FutureBuilder<List<Favouritesmodel>>(
@@ -86,8 +86,35 @@ class FavouritesScreen extends ConsumerWidget {
                           ],
                           description: snapshot.data![index].description,
                         ))),
+                    leading: Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                snapshot.data![index].images[0].toString()),
+                            fit: BoxFit.fill,
+                          )),
+                    ),
                     title: Text(snapshot.data![index].title),
-                    subtitle: Text(snapshot.data![index].price.toString()),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            snapshot.data![index].description.toString()),
+                        Text(
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          "₹${snapshot.data![index].price.toString()}/-",
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   );
                 });
           },

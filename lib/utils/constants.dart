@@ -1,6 +1,7 @@
 dynamic authToken;
 dynamic userId;
 var userName;
+dynamic categoryId;
 
 //apis
 
@@ -10,3 +11,5 @@ var loginUrl = baseUrl + "auth/login";
 var productlistUrl = baseUrl + ("products");
 var userProfile = baseUrl + ("auth/profile");
 var updateProfile = baseUrl + ("users/$userId");
+var getcategories = baseUrl + ("categories");
+var checkUser = baseUrl + ("users/is-available");
