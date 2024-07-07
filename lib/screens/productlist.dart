@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -22,12 +23,16 @@ class ProductlistScreen extends ConsumerWidget {
   // var categoryId;
 
   var isFiltering = false;
+  TextEditingController minCont = TextEditingController();
+  TextEditingController maxCont = TextEditingController();
+  RangeValues _currentRangeValues = const RangeValues(40, 80);
 
   @override
   Widget build(BuildContext context, ref) {
+    final isFilteringProvider = StateProvider<bool>((ref) => false);
     final categories = ref.watch(categoriesProvider);
     final products = ref.watch(producstProvider);
-    final filtProducts = ref.watch(filtbycategproducstProvider);
+    final filtProducts = ref.watch(filteredproducstProvider);
 
     return Scaffold(
         appBar: AppBar(
@@ -41,6 +46,7 @@ class ProductlistScreen extends ConsumerWidget {
             ),
             IconButton(
                 onPressed: () {
+                  print(isFiltering);
                   Get.bottomSheet(StatefulBuilder(builder: (context, setState) {
                     return Container(
                       width: double.infinity,
@@ -50,10 +56,29 @@ class ProductlistScreen extends ConsumerWidget {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Filter",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Filter",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                  isFiltering
+                                      ? ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.red.shade50),
+                                          onPressed: () {
+                                            isFiltering = false;
+                                            ref.refresh(producstProvider);
+                                            Get.back();
+                                          },
+                                          child: Text("Clear Filters X"))
+                                      : Container()
+                                ],
                               ),
                               const SizedBox(
                                 height: 10,
@@ -90,6 +115,7 @@ class ProductlistScreen extends ConsumerWidget {
                                                 child: InkWell(
                                                   onTap: () {
                                                     setState(() {
+                                                      filterType = "byCategory";
                                                       categoryId =
                                                           category[index].id;
                                                     });
@@ -121,16 +147,117 @@ class ProductlistScreen extends ConsumerWidget {
                                   loading: () => Center(
                                         child: CircularProgressIndicator(),
                                       )),
-                              ElevatedButton(
-                                  onPressed: () {
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                "By Range",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black45,
+                                    fontSize: 14),
+                              ),
+                              RangeSlider(
+                                  //min: 100,
+                                  labels: RangeLabels(
+                                      _currentRangeValues.start
+                                          .round()
+                                          .toString(),
+                                      _currentRangeValues.end
+                                          .round()
+                                          .toString()),
+                                  max: 10000,
+                                  divisions: 10000,
+                                  values: _currentRangeValues,
+                                  onChanged: (value) {
+                                    filterType = "byRange";
                                     setState(
                                       () {
-                                        isFiltering = true;
-                                        print(isFiltering);
+                                        _currentRangeValues = value;
                                       },
                                     );
-                                  },
-                                  child: Text("Apply"))
+                                    minPrice = value.start;
+                                    maxPrice = value.end;
+                                  }),
+                              Text(
+                                "By Custom Price",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black45,
+                                    fontSize: 14),
+                              ),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2.2,
+                                    child: TextFormField(
+                                      controller: minCont,
+                                      onChanged: (value) {
+                                        minPrice = int.parse(value);
+                                      },
+                                      decoration: InputDecoration(
+                                          hintText: "Min Price",
+                                          border: OutlineInputBorder()),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2.2,
+                                    child: TextFormField(
+                                      onChanged: (value) {
+                                        maxPrice = int.parse(value);
+                                      },
+                                      controller: maxCont,
+                                      decoration: InputDecoration(
+                                          hintText: "Max Price",
+                                          border: OutlineInputBorder()),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
+                              Center(
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      minCont.text.isNotEmpty &&
+                                              maxCont.text.isNotEmpty
+                                          ? filterType = "byRange"
+                                          : minCont.text.isNotEmpty &&
+                                                  maxCont.text.isEmpty
+                                              ? filterType = "byMinPrice"
+                                              : maxCont.text.isNotEmpty &&
+                                                      minCont.text.isEmpty
+                                                  ? filterType = "byMaxPrice"
+                                                  : null;
+
+                                      ref
+                                          .read(isFilteringProvider.notifier)
+                                          .update((state) => state = true);
+                                      // ref
+                                      //         .read(isFilteringProvider.notifier)
+                                      //         .state =
+                                      //     ref
+                                      //         .read(isFilteringProvider.notifier)
+                                      //         .state = true;
+                                      // print(ref
+                                      //     .read(isFilteringProvider.notifier)
+                                      //     .state);
+
+                                      //  ref.refresh(isFilteringProvider);
+                                      isFiltering = true;
+                                      ref.refresh(filteredproducstProvider);
+                                      Get.back();
+                                    },
+                                    child: Text("Apply Filters")),
+                              )
                             ]),
                       ),
                     );
@@ -186,7 +313,7 @@ class ProductlistScreen extends ConsumerWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "${product[index].title} ///",
+                                              "${product[index].title}",
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   //   fontWeight: FontWeight.bold,

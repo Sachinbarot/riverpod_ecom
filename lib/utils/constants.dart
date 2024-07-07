@@ -2,6 +2,9 @@ dynamic authToken;
 dynamic userId;
 var userName;
 dynamic categoryId;
+dynamic filterType;
+dynamic minPrice;
+dynamic maxPrice;
 
 //apis
 
