@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_lucide/flutter_lucide.dart';
@@ -23,6 +24,8 @@ class ProductlistScreen extends ConsumerWidget {
   // var categoryId;
 
   var isFiltering = false;
+  var isSearching = false;
+  TextEditingController _searchTextCont = TextEditingController();
   TextEditingController minCont = TextEditingController();
   TextEditingController maxCont = TextEditingController();
   RangeValues _currentRangeValues = const RangeValues(40, 80);
@@ -38,6 +41,14 @@ class ProductlistScreen extends ConsumerWidget {
         appBar: AppBar(
           title: const Text('Product List'),
           actions: [
+            // IconButton(
+            //   onPressed: () {
+            //     //print(isSearching);
+            //     isSearching = true;
+            //     //print(isSearching);
+            //   },
+            //   icon: Icon(Icons.search),
+            // ),
             IconButton(
               onPressed: () {
                 Get.to(() => UserProfileScreen());
@@ -73,6 +84,7 @@ class ProductlistScreen extends ConsumerWidget {
                                                   Colors.red.shade50),
                                           onPressed: () {
                                             isFiltering = false;
+                                            categoryId = null;
                                             ref.refresh(producstProvider);
                                             Get.back();
                                           },
@@ -134,7 +146,15 @@ class ProductlistScreen extends ConsumerWidget {
                                                     ),
                                                     child: Center(
                                                       child: Text(
-                                                          category[index].name),
+                                                        category[index].name,
+                                                        style: TextStyle(
+                                                            color: categoryId ==
+                                                                    category[
+                                                                            index]
+                                                                        .id
+                                                                ? Colors.blue
+                                                                : Colors.black),
+                                                      ),
                                                     ),
                                                   ),
                                                 ));

@@ -288,11 +288,11 @@ class _GenerateinvoiceScreenState extends State<GenerateinvoiceScreen> {
                                       crossAxisAlignment:
                                           pw.CrossAxisAlignment.start,
                                       children: [
-                                        pw.Text("Invoice TO:",
+                                        pw.Text("Invoice FROM:",
                                             style: pw.TextStyle(
                                                 fontWeight:
                                                     pw.FontWeight.bold)),
-                                        pw.Text("JOHN HOWELS DOW",
+                                        pw.Text("My Store Ltd.",
                                             style: pw.TextStyle(
                                                 fontWeight:
                                                     pw.FontWeight.bold)),

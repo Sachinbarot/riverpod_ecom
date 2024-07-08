@@ -5,6 +5,7 @@ dynamic categoryId;
 dynamic filterType;
 dynamic minPrice;
 dynamic maxPrice;
+dynamic searchQuery;
 
 //apis
 

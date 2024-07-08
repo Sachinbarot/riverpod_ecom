@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/route_manager.dart';
 import 'package:riverpod_ecom/apiservice.dart';
 import 'package:riverpod_ecom/providers/userprovider.dart';
 
@@ -44,7 +45,10 @@ class UpdateUserScreen extends ConsumerWidget {
                           apiservice
                               .updateUser(
                                   _nameController.text, _emailController.text)
-                              .whenComplete(() {});
+                              .whenComplete(() {
+                            Get.back();
+                            ref.refresh(userprofileProvider);
+                          });
                         },
                         child: Text("Update User"))
                   ],

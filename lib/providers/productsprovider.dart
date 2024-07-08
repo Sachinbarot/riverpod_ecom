@@ -40,3 +40,14 @@ final filteredproducstProvider =
   }
   return products.toList();
 });
+
+final searchedProductlistProvider =
+    FutureProvider<List<ProductModel>>((ref) async {
+  final products = ref.watch(producstProvider).asData!.value;
+  print(products
+      .where((product) => product.title.contains(searchQuery))
+      .toList());
+  return products
+      .where((product) => product.title.contains(searchQuery))
+      .toList();
+});
